@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P 500 Stock Average Cost Calculator</title>
+</head>
+<body>
+    <h1>S&P 500 Stock Average Cost Calculator</h1>
+    <form id="stockForm">
+        <label for="stockPrices">Enter stock prices (comma separated):</label><br>
+        <input type="text" id="stockPrices" name="stockPrices"><br><br>
+        <input type="button" value="Calculate Average Cost" onclick="calculateAverageCost()">
+    </form>
+    <p id="result"></p>
+
+    <script>
+        function calculateAverageCost() {
+            const stockPricesInput = document.getElementById('stockPrices').value;
+            const stockPricesArray = stockPricesInput.split(',').map(Number);
+            const totalCost = stockPricesArray.reduce((acc, price) => acc + price, 0);
+            const averageCost = totalCost / stockPricesArray.length;
+            document.getElementById('result').innerText = `The average cost of the stocks is $${averageCost.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
