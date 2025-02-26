@@ -3,24 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S&P 500 Stock Average Cost Calculator</title>
+    <title>Stock Value Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .stock-entry {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>S&P 500 Stock Average Cost Calculator</h1>
-    <form id="stockForm">
-        <label for="stockPrices">Enter stock prices (comma separated):</label><br>
-        <input type="text" id="stockPrices" name="stockPrices"><br><br>
-        <input type="button" value="Calculate Average Cost" onclick="calculateAverageCost()">
-    </form>
-    <p id="result"></p>
+    <h2>Stock Value Calculator</h2>
+    <button onclick="addStockEntry()">Add Stock</button>
+    <div id="stockContainer"></div>
+    <button onclick="calculateTotal()">Calculate Total</button>
+    <h3>Total Future Value: $<span id="totalValue">0.00</span></h3>
+    <h3>Percentage Change: <span id="percentChange">0.00%</span></h3>
 
     <script>
-        function calculateAverageCost() {
-            const stockPricesInput = document.getElementById('stockPrices').value;
-            const stockPricesArray = stockPricesInput.split(',').map(Number);
-            const totalCost = stockPricesArray.reduce((acc, price) => acc + price, 0);
-            const averageCost = totalCost / stockPricesArray.length;
-            document.getElementById('result').innerText = `The average cost of the stocks is $${averageCost.toFixed(2)}`;
+        function addStockEntry() {
+            let container = document.getElementById('stockContainer');
+            let div = document.createElement('div');
+            div.classList.add('stock-entry');
+            div.innerHTML = `
+                Stock Price: <input type="number" step="0.01" class="price" placeholder="Enter stock price"> 
+                Percentage Change (%): <input type="number" step="0.01" class="percentage" placeholder="Enter % change">
+                <button onclick="this.parentElement.remove()">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function calculateTotal() {
+            let prices = document.querySelectorAll('.price');
+            let percentages = document.querySelectorAll('.percentage');
+            let total = 0;
+            let initialTotal = 0;
+
+            for (let i = 0; i < prices.length; i++) {
+                let price = parseFloat(prices[i].value) || 0;
+                let percentage = parseFloat(percentages[i].value) || 0;
+                initialTotal += price;
+                let futureValue = price * (1 + percentage / 100);
+                total += futureValue;
+            }
+
+            document.getElementById('totalValue').textContent = total.toFixed(2);
+            let percentChange = initialTotal ? ((total - initialTotal) / initialTotal) * 100 : 0;
+            document.getElementById('percentChange').textContent = percentChange.toFixed(2) + "%";
         }
     </script>
 </body>
